@@ -1,0 +1,11 @@
+/*
+
+1. Input users
+1.1 Shuffle
+1.2 Output array of two opponents
+
+*/
+import { Opponents } from './inputOpponents.js';
+console.log(new Opponents());
+
+//# sourceMappingURL=data:application/json;charset=utf8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIm1haW4udHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7Ozs7OztFQU1FO0FBRUYsT0FBTyxFQUFFLFNBQVMsRUFBRSxNQUFNLHFCQUFxQixDQUFDO0FBRWhELE9BQU8sQ0FBQyxHQUFHLENBQUMsSUFBSSxTQUFTLEVBQUUsQ0FBQyxDQUFDIiwiZmlsZSI6Im1haW4uanMiLCJzb3VyY2VzQ29udGVudCI6WyIvKlxyXG5cclxuMS4gSW5wdXQgdXNlcnNcclxuMS4xIFNodWZmbGVcclxuMS4yIE91dHB1dCBhcnJheSBvZiB0d28gb3Bwb25lbnRzXHJcblxyXG4qL1xyXG5cclxuaW1wb3J0IHsgT3Bwb25lbnRzIH0gZnJvbSAnLi9pbnB1dE9wcG9uZW50cy5qcyc7XHJcblxyXG5jb25zb2xlLmxvZyhuZXcgT3Bwb25lbnRzKCkpOyAiXX0=
