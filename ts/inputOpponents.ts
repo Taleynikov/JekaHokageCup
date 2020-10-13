@@ -1,27 +1,57 @@
-import { EventEmitter } from './core.js';
+import { EventEmitter, shuffle } from './core.js';
 
-const wrap = '#inputnames';
+const parentSelector = '#inputnames';
 
-const inputCN = 'input';
-const _input = `<input class="${inputCN}">`;
+const inputAreaPlc = 'Input name';
+const inputAreaCN = 'opponents__input';
+const _inputArea = `<input type="text" class="${inputAreaCN}" placegolder="${inputAreaPlc}">`;
 
-const inputItemCN = 'item';
-const _inputItem = `<div class="${inputItemCN}">${_input}</div>`;
+const itemNameCN = 'opponents-item__name';
+const _itemName = `<span class="${itemNameCN}"></span>`;
 
-const matchupItemCN = 'matchup';
-const _matchupItem = `<div class="${matchupItemCN}">${_inputItem}${_inputItem}</div>`;
+const itemRemoveCN = 'opponents-item__Remove';
+const _itemRemove = `<span class="${itemRemoveCN}">[X]</span>`;
 
-const matchupGridCN = 'matchup';
-const _matchupGrid = `<div class="${matchupItemCN}"></div>`;
+const itemCN = 'opponents-item';
+const _item = `<div class="${itemCN}">${_itemName}${_itemRemove}</div>`;
+
+const itemListCN = 'opponents-list';
+const _itemList = `<div class="${itemListCN}"></div>`;
+
+const inputWrapCN = 'opponents';
+const _inputWrap = `<div class="${inputWrapCN}"></div>`;
+
 
 class OpponentsModel extends EventEmitter {
     data: string[] = [];
     result: Array<[string, string]> = [];
 
-    constructor() {
-        super();
+    addName(name: string) {
+        this.data.push(name);
+    }
 
-        // this.data = null;
+    removeName(name: string) {
+        const index = this.data.indexOf(name);
+
+        this.data.splice(index, 1);
+    }
+
+    shuffle(): Array<[string, string]> {
+        const shuffled = shuffle(this.data);
+        const matchup = [];
+
+        let group = [];
+
+        shuffled.forEach((el, i) => {
+            group.push(el);
+
+            if (group.length == 2) {
+                matchup.push(group.map(n => n));
+                group = [];
+            }
+        });
+
+        return matchup;
     }
 }
 
@@ -29,30 +59,51 @@ class OpponentsView extends EventEmitter {
     _model: OpponentsModel;
 
     elements = {
-        $wrap: $(wrap),
-        $grid: $(_matchupGrid)
+        $wrap: $(_inputWrap),
+        $list: $(_itemList),
+        $input: $(_inputArea)
     };
 
     constructor(model: OpponentsModel) {
         super();
 
         this._model = model;
+
+        this.elements.$input.on('keydown', event => this.emit('inputHandler', event));
+        this.elements.$list.on('click', `.${itemRemoveCN}`, event => this.emit('removeItem', this.getItemText(event.target)));
     }
 
-    addMatchupElem(): void {
-        const inputSelector = `.${inputCN}`;
-
-        let count = $(inputSelector).length;
-        const $item = $(_matchupItem);
-        const $input = $item.find(inputSelector);
-
-        $input.each((i, el) => { $(el).attr('data-index', count++) });
-
-        this.elements.$grid.append($item);
+    getItemText(elem: HTMLElement): string {
+        return $(elem).closest(`.${itemCN}`).find(`.${itemNameCN}`).text();
     }
 
-    render(): void {
-        $(wrap).append(this.elements.$grid);
+    clearInput() {
+        this.elements.$input.val('');
+    }
+
+    addItemElem(name: string) {
+        const $item = $(_item);
+        const $name = $item.find(`.${itemNameCN}`);
+
+        $name.text(name);
+
+        this.elements.$list.append($item);
+    }
+
+    removeItemElem(name: string) {
+        const $list = this.elements.$list;
+        const $target = $list.find(`*:contains('${name}')`);
+
+        $target.remove();
+    }
+
+    render() {
+        const $parent = $(parentSelector);
+        const $wrap = this.elements.$wrap;
+        const $list = this.elements.$list;
+        const $input = this.elements.$input;
+
+        $wrap.append($list).append($input).appendTo($parent);
     }
 }
 
@@ -63,10 +114,31 @@ class OpponentsController {
     constructor(model: OpponentsModel, view: OpponentsView) {
         this._model = model;
         this._view = view;
+
+        view.on('addItem', (name: string) => this.addItem(name));
+        view.on('removeItem', (name: string) => this.removeItem(name));
+        view.on('inputHandler', (event) => this.inputHandler(event));
     }
 
-    addMatchup(): void {
-        this._view.addMatchupElem();
+    inputHandler(event) {
+        const key = event.key;
+        const keyCode = event.keyCode;
+        const value = event.target.value;
+
+        if (key == 'Enter' || keyCode == 13) {
+            this.addItem(value);
+            this._view.clearInput();
+        }
+    }
+
+    addItem(name: string) {
+        this._model.addName(name);
+        this._view.addItemElem(name);
+    }
+
+    removeItem(name: string) {
+        this._model.removeName(name);
+        this._view.removeItemElem(name);
     }
 }
 
@@ -78,7 +150,16 @@ export class Opponents {
     constructor() {
         this.view.render();
 
-        this.controller.addMatchup();
-        this.controller.addMatchup();
+        this.controller.addItem('test1');
+        this.controller.addItem('test2');
+        this.controller.addItem('test3');
+        this.controller.addItem('test4');
+        this.controller.addItem('test5');
+        this.controller.addItem('test6');
+        this.controller.addItem('test7');
+    }
+
+    shuffle() {
+        return this.model.shuffle();
     }
 }
