@@ -1,12 +1,5 @@
-/*
-
-1. Input users
-1.1 Shuffle
-1.2 Output array of two opponents
-
-*/
-
 import { Opponents } from './inputOpponents.js';
+import { HeroesGrid } from './heroesGrid.js';
 
 
 const opp = new Opponents();
@@ -17,3 +10,6 @@ $('#go').on('click', event => {
 
     ready.forEach(el => console.log(el[0] + ' vs. ' + el[1]))
 });
+
+const grid = new HeroesGrid();
+console.log(grid);

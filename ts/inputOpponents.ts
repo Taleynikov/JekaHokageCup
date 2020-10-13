@@ -149,14 +149,6 @@ export class Opponents {
 
     constructor() {
         this.view.render();
-
-        this.controller.addItem('test1');
-        this.controller.addItem('test2');
-        this.controller.addItem('test3');
-        this.controller.addItem('test4');
-        this.controller.addItem('test5');
-        this.controller.addItem('test6');
-        this.controller.addItem('test7');
     }
 
     shuffle() {
