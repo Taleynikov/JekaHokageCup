@@ -35,24 +35,6 @@ class OpponentsModel extends EventEmitter {
 
         this.data.splice(index, 1);
     }
-
-    shuffle(): Array<[string, string]> {
-        const shuffled = shuffle(this.data);
-        const matchup = [];
-
-        let group = [];
-
-        shuffled.forEach((el, i) => {
-            group.push(el);
-
-            if (group.length == 2) {
-                matchup.push(group.map(n => n));
-                group = [];
-            }
-        });
-
-        return matchup;
-    }
 }
 
 class OpponentsView extends EventEmitter {
@@ -140,6 +122,30 @@ class OpponentsController {
         this._model.removeName(name);
         this._view.removeItemElem(name);
     }
+
+    shuffle(): {left: Array<[string, string]>, right: Array<[string, string]>} {
+        const shuffled = shuffle(this._model.data);
+        const left = makeMatchup(shuffled);
+        const right = makeMatchup( shuffled.concat( shuffled.splice(0, shuffled.length - 1) ) );
+
+        function makeMatchup(names: string[]) {
+            let temp = [];
+            let group = [];
+
+            names.forEach((el, i) => {
+                temp.push(el);
+    
+                if (temp.length == 2) {
+                    group.push(temp.map(n => n));
+                    temp = [];
+                }
+            });
+
+            return group;
+        }
+
+        return {left, right};
+    }
 }
 
 export class Opponents { 
@@ -149,9 +155,18 @@ export class Opponents {
 
     constructor() {
         this.view.render();
+
+        // this.controller.addItem('dima');
+        // this.controller.addItem('sanya');
+        // this.controller.addItem('igor');
+        // this.controller.addItem('makc');
+        // this.controller.addItem('katya');
+        // this.controller.addItem('polina');
+        // this.controller.addItem('nataha');
+        // this.controller.addItem('pati');
     }
 
     shuffle() {
-        return this.model.shuffle();
+        return this.controller.shuffle();
     }
 }
