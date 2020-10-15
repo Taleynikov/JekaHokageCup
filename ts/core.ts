@@ -27,3 +27,8 @@ export function random(min: number, max: number): number {
     
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
+
+export const color: string[] = [
+    '#ff0000', '#008000', '#1e90ff', '#ff8c00', '#ffd700', '#6a5acd', '#483d8b', '#ff00ff',
+    '#4b0082', '#ff1493', '#ff6347', '#b22222', '#2f4f4f', '#8b4513', '#20b2aa', '#ff69b4'
+];

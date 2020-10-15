@@ -4,11 +4,11 @@ import { Hero } from './types';
 
 let parentSelector = '#heropull';
 
-const pullListCN = 'hero-pull-list';
-const _pullList = `<div class="${pullListCN}"></div>`;
+// const pullListCN = 'hero-pull-list';
+// const _pullList = `<div class="${pullListCN}"></div>`;
 
-const pullItemCN = 'hero-pull-list__item';
-const _pullItem = `<div class="${pullItemCN}"></div>`;
+// const pullItemCN = 'hero-pull-list__item';
+// const _pullItem = `<div class="${pullItemCN}"></div>`;
 
 const disabledGridCN = 'heroes-grid_disabled';
 const disabledHeroInGridCN = 'heroes-grid__col_disabled';
@@ -43,7 +43,7 @@ class HeroPullView extends EventEmitter {
 
     elem = {
         $wrap: $(parentSelector),
-        $list: $(_pullList)
+        // $list: $(_pullList)
     };
 
     constructor(model: HeroPullModel) {
@@ -63,15 +63,15 @@ class HeroPullView extends EventEmitter {
         $target.addClass(disabledHeroInGridCN);
     }
 
-    addHeroInPullList(id: string) {
-        const $grid = this._model.heroesGrid.$gridElem;
-        const $clone = $grid.find(`[data-id="${id}"]`).children().clone();
-        const $li = this.elem.$list.children();
+    // addHeroInPullList(id: string) {
+    //     const $grid = this._model.heroesGrid.$gridElem;
+    //     const $clone = $grid.find(`[data-id="${id}"]`).children().clone();
+    //     const $li = this.elem.$list.children();
 
-        const step = this._model.step;
+    //     const step = this._model.step;
 
-        $li.eq(step).append($clone);
-    }
+    //     $li.eq(step).append($clone);
+    // }
 
     disableGrid(cond: boolean) {
         const $grid = this._model.heroesGrid.$gridElem;
@@ -81,12 +81,10 @@ class HeroPullView extends EventEmitter {
     }
 
     render() {
-        const $list = this.elem.$list;
-        this.elem.$wrap.prepend($list);
+        // const $list = this.elem.$list;
+        // this.elem.$wrap.prepend($list);
 
-        this._model.players.forEach(name => $list.append($(_pullItem)));
-
-        this.emit('pullStart');
+        // this._model.players.forEach(name => $list.append($(_pullItem)));
     }
 }
 
@@ -94,8 +92,9 @@ class HeroPullController {
     _model: HeroPullModel;
     _view: HeroPullView;
 
-    pull = function() {};
-    pullEnd = function() {};
+    pull = function(currPlayer: string) {};
+    pullEnd = function(pull: Hero[]) {};
+    click = function(hero: Hero) {};
 
     constructor(model: HeroPullModel, view: HeroPullView) {
         this._model = model;
@@ -111,16 +110,19 @@ class HeroPullController {
         const hero = model.heroesGrid.getHero(id);
 
         view.disableHeroInGrid(id);
-        view.addHeroInPullList(id);
+        // view.addHeroInPullList(id);
+        this.click(hero);
 
         model.step++;
         model.addPull(hero);
 
         if (model.pullEnded) {
             view.disableGrid(model.pullEnded);
-            this.pullEnd();
+            model.heroesGrid.view.setTarget(null);
+
+            this.pullEnd(this._model.pull);
         } else {
-            this.pull();
+            this.pull(model.currPlayer);
         }
     }
 }

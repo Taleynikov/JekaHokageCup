@@ -20,12 +20,13 @@ console.log(opp);
 //     console.log(evt)
 // });
 
-const pull = new HeroPull( opp.getPlayers() );
-console.log(pull)
+// const pull = new HeroPull( opp.getPlayers() );
+// console.log(pull)
 
-pull
-    .on('pull', () => {
-        console.log(pull.model.players)
-        console.log(pull.model.currPlayer)
-    })
-    .on('pullEnd', () => console.log('end'));
+// pull
+//     .on('click', hero => console.log(hero))
+//     .on('pull', () => {
+//         console.log(pull.model.players)
+//         console.log(pull.model.currPlayer)
+//     })
+//     .on('pullEnd', () => console.log('end'));

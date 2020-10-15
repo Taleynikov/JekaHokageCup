@@ -7,3 +7,10 @@ export interface Hero {
 export interface GridOptions {
     parent?: string;
 }
+
+export interface Player {
+    name: string;
+    pick?: Hero[];
+    ban?: Hero[];
+    heroes?: [Hero, Hero];
+}
