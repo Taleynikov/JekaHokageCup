@@ -1,21 +1,31 @@
 import { Opponents } from './inputOpponents.js';
 import { HeroesGrid } from './heroesGrid.js';
+import { HeroPull } from './heroPull.js';
 
 
 const opp = new Opponents();
 console.log(opp);
+// console.log(opp.getPlayers())
 
-$('#go').on('click', event => {
-    const ready = opp.shuffle();
+// $('#go').on('click', event => {
+//     const ready = opp.shuffle();
 
-    // ready.forEach(el => console.log(el[0] + ' vs. ' + el[1]))
+//     console.log(ready);
+// });
 
-    console.log(ready)
-});
+// const grid = new HeroesGrid();
+// console.log(grid);
 
-const grid = new HeroesGrid();
-console.log(grid);
+// grid.on('click', (evt) => {
+//     console.log(evt)
+// });
 
-grid.on('click', (evt) => {
-    console.log(evt)
-});
+const pull = new HeroPull( opp.getPlayers() );
+console.log(pull)
+
+pull
+    .on('pull', () => {
+        console.log(pull.model.players)
+        console.log(pull.model.currPlayer)
+    })
+    .on('pullEnd', () => console.log('end'));

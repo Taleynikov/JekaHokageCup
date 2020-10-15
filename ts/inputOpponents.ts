@@ -23,17 +23,17 @@ const _inputWrap = `<div class="${inputWrapCN}"></div>`;
 
 
 class OpponentsModel extends EventEmitter {
-    data: string[] = [];
+    players: string[] = [];
     result: Array<[string, string]> = [];
 
     addName(name: string) {
-        this.data.push(name);
+        this.players.push(name);
     }
 
     removeName(name: string) {
-        const index = this.data.indexOf(name);
+        const index = this.players.indexOf(name);
 
-        this.data.splice(index, 1);
+        this.players.splice(index, 1);
     }
 }
 
@@ -124,7 +124,7 @@ class OpponentsController {
     }
 
     shuffle(): {left: Array<[string, string]>, right: Array<[string, string]>} {
-        const shuffled = shuffle(this._model.data);
+        const shuffled = shuffle(this._model.players);
         const left = makeMatchup(shuffled);
         const right = makeMatchup( shuffled.concat( shuffled.splice(0, shuffled.length - 1) ) );
 
@@ -149,21 +149,29 @@ class OpponentsController {
 }
 
 export class Opponents { 
-    model      = new OpponentsModel();
-    view       = new OpponentsView(this.model);
-    controller = new OpponentsController(this.model, this.view);
+    model: OpponentsModel;
+    view: OpponentsView;
+    controller: OpponentsController;
 
     constructor() {
+        this.model      = new OpponentsModel();
+        this.view       = new OpponentsView(this.model);
+        this.controller = new OpponentsController(this.model, this.view);
+
         this.view.render();
 
-        // this.controller.addItem('dima');
-        // this.controller.addItem('sanya');
-        // this.controller.addItem('igor');
-        // this.controller.addItem('makc');
-        // this.controller.addItem('katya');
-        // this.controller.addItem('polina');
-        // this.controller.addItem('nataha');
-        // this.controller.addItem('pati');
+        this.controller.addItem('dima');
+        this.controller.addItem('sanya');
+        this.controller.addItem('igor');
+        this.controller.addItem('makc');
+        this.controller.addItem('katya');
+        this.controller.addItem('polina');
+        this.controller.addItem('nataha');
+        this.controller.addItem('pati');
+    }
+
+    getPlayers(): string[] {
+        return this.model.players.map(n => n);
     }
 
     shuffle() {

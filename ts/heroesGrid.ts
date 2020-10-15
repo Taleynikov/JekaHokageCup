@@ -62,7 +62,7 @@ class HeroesGridView extends EventEmitter {
     }
 
     setTarget(elem: HTMLElement) {
-        const $target = $(`.${colCN}`);
+        const $target = this.elem.$grid.find(`.${colCN}`);
         const id = $(elem).attr('data-id');
 
         $target.removeClass(`${colTargetHeroCN} ${colTargetSymbolCN}`);
@@ -143,7 +143,7 @@ class HeroesGridController {
     _model: HeroesGridModel;
     _view: HeroesGridView;
 
-    click: Function;
+    click = function(info) {};
 
     constructor(model: HeroesGridModel, view: HeroesGridView) {
         this._model = model;
@@ -154,19 +154,32 @@ class HeroesGridController {
 }
 
 export class HeroesGrid { 
-    model      = new HeroesGridModel();
-    view       = new HeroesGridView(this.model);
-    controller = new HeroesGridController(this.model, this.view);
+    model: HeroesGridModel;
+    view : HeroesGridView;
+    controller: HeroesGridController;
+
+    $gridElem: JQuery;
 
     constructor(gridOpt?: GridOptions) {
         if (gridOpt) {
             if (gridOpt.parent) parentSelector = gridOpt.parent;
         }
 
+        this.model      = new HeroesGridModel();
+        this.view       = new HeroesGridView(this.model);
+        this.controller = new HeroesGridController(this.model, this.view);
+
+        this.$gridElem = this.view.elem.$grid;
+
         this.view.render();
+    }
+
+    getHero(id: string): Hero {
+        return this.model.getHero(id);
     }
 
     on(event: string, callback: Function) {
         this.controller[event] = callback;
+        return this;
     }
 }

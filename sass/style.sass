@@ -1,4 +1,14 @@
 .heroes-grid
+    &_disabled
+        position: relative
+        &:before
+            content: ""
+            width: 100%
+            height: 100%
+            position: absolute
+            top: 0
+            left: 0
+            z-index: 5
     &__row
         display: flex
     &__col
@@ -11,6 +21,18 @@
             color: #fff
         &_hover
             opacity: 0.5
+        &_disabled
+            position: relative
+            opacity: 1
+            &:before
+                content: ""
+                width: 100%
+                height: 100%
+                background-color: rgba(#000, .8)
+                position: absolute
+                top: 0
+                left: 0
+                z-index: 2
     &__symbol
         display: flex
         justify-content: center
@@ -31,3 +53,8 @@
             top: 0
             left: 0
             object-fit: cover
+
+.hero-pull-list
+    display: flex
+    &__item
+        flex: 1 1 100%
